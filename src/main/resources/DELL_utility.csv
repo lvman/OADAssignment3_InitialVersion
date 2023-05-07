@@ -1,0 +1,29 @@
+component_name;contribution
+Less than $400;4
+$400 - $800;3
+$800 - $1200;2
+More than $1200;1
+Ultra Light;10
+Light;5
+Desktop Replacement;1
+Intel Core 2 Duo;10
+Intel Pentium Dual core;7
+Intel Celeron;4
+Intel Atom;2
+More than 4GB;5
+4GB;4
+3GB;3
+2GB;2
+1GB;1
+500GB;10
+320GB;8
+250GB;7
+160GB;6
+128GB Solid State;9
+120GB;5
+80GB;3
+Windows Vista 64 bit;10
+Windows XP Home;4
+Ubuntu Linux;5
+Windows 7;8
+Windows 8;9
