@@ -11,7 +11,7 @@ package at.tugraz.ist.ase.dell.controller;
 
 import at.tugraz.ist.ase.dell.mapper.ComponentMapper;
 import at.tugraz.ist.ase.dell.mapper.ProductMapper;
-import at.tugraz.ist.ase.dell.mapper.UserRequirementMapper;
+import at.tugraz.ist.ase.dell.mapper.UserNeedsMapper;
 import at.tugraz.ist.ase.dell.model.*;
 import at.tugraz.ist.ase.dell.service.Configurator;
 import at.tugraz.ist.ase.dell.service.Requirement;
@@ -29,7 +29,6 @@ import java.util.Map;
 
 public class AppController {
     protected DellKB dellKb;
-    protected UserRequirement userRequirement;
     protected JFrame mainView;
 
     protected List<Product> products = null;
@@ -38,8 +37,6 @@ public class AppController {
         // create the DellKB
         dellKb = new DellKB();
         dellKb.init();
-
-        userRequirement = new UserRequirement();
 
         // use the Java look and feel.
         try {
@@ -51,7 +48,7 @@ public class AppController {
         JFrame.setDefaultLookAndFeelDecorated(true);
         JDialog.setDefaultLookAndFeelDecorated(true);
 
-        mainView = new MainView(this, userRequirement);
+        mainView = new MainView(this);
         mainView.setLocationRelativeTo(null); //center the window
         mainView.setVisible(true);
     }
@@ -65,11 +62,11 @@ public class AppController {
         return map;
     }
 
-    public int findProducts(@NonNull UserRequirement userRequirement) {
+    public int findProducts(@NonNull UserNeeds userNeeds) {
         Configurator configurator = new Configurator(dellKb);
 
         // map to Requirement
-        Requirement requirement = UserRequirementMapper.toRequirement(userRequirement, dellKb.getProductStructure());
+        Requirement requirement = UserNeedsMapper.toRequirement(userNeeds, dellKb.getProductStructure());
 
         configurator.findAllSolutions(0, requirement);
 //        System.out.println("Number of solutions: " + configurator.getNumberSolutions());
@@ -82,73 +79,73 @@ public class AppController {
 //
 // BEGIN OF TASK 2 - Strategy pattern
 //
-    public Map.Entry<Integer, TableViewModel> sortProducts(@NonNull UserRequirement userRequirement) {
+    public Map.Entry<Integer, TableViewModel> sortProducts(UserPreferences userPreferences) {
         if (products.isEmpty()) {
             return Map.entry(0, new TableViewModel(new String[0], new Object[0][0]));
         }
 
         // check utility
-        if (userRequirement.hasPreferences()) {
+        if (userPreferences == null) {
+            products.sort(Product::compareTo);
+        } else {
             // calculate utility
-            products.forEach(product -> product.setUtility(calculateUtility(product, userRequirement)));
+            products.forEach(product -> product.setUtility(calculateUtility(product, userPreferences)));
             DescendingUtilityComparator comparator = new DescendingUtilityComparator();
             products.sort(comparator);
-        } else {
-            products.sort(Product::compareTo);
         }
 
         TableViewModel tableViewModel = ProductMapper.toTableViewModel(products, DellKB.getRESULT_TABLE_COLUMN_NAMES());
         return Map.entry(products.size(), tableViewModel);
     }
 
-    private int calculateUtility(Product product, UserRequirement userRequirement) {
+    private int calculateUtility(Product product, UserPreferences userPreferences) {
         int utility = 0;
 
         // price range
-        if (userRequirement.getPref_price_range() > 0) {
+        if (userPreferences.getPrice_range() > 0) {
             String priceRange = product.getPrice_range();
             if (!priceRange.isEmpty()) {
-                utility += userRequirement.getPref_price_range() * dellKb.getProductStructure().getOption(priceRange).getContribution();
+                utility += userPreferences.getPrice_range() * dellKb.getProductStructure().getOption(priceRange).getContribution();
             }
         }
 
         // weight
-        if (userRequirement.getPref_weight() > 0) {
+        if (userPreferences.getWeight() > 0) {
             String weight = product.getWeight();
             if (!weight.isEmpty()) {
-                utility += userRequirement.getPref_weight() * dellKb.getProductStructure().getOption(weight).getContribution();
+                utility += userPreferences.getWeight() * dellKb.getProductStructure().getOption(weight).getContribution();
             }
         }
 
         // processor
-        if (userRequirement.getPref_processor() > 0) {
+        if (userPreferences.getProcessor() > 0) {
             String processor = product.getProcessor();
             if (!processor.isEmpty()) {
-                utility += userRequirement.getPref_processor() * dellKb.getProductStructure().getOption(processor).getContribution();
+                utility += userPreferences.getProcessor() * dellKb.getProductStructure().getOption(processor).getContribution();
             }
         }
 
         // memory
-        if (userRequirement.getPref_memory() > 0) {
+        if (userPreferences.getMemory() > 0) {
             String memory = product.getMemory();
             if (!memory.isEmpty()) {
-                utility += userRequirement.getPref_memory() * dellKb.getProductStructure().getOption(memory).getContribution();
+                utility += userPreferences.getMemory() * dellKb.getProductStructure().getOption(memory).getContribution();
             }
         }
 
         // hard drive
-        if (userRequirement.getPref_hard_drive() > 0) {
+        if (userPreferences.getHard_drive() > 0) {
             String hardDrive = product.getHard_drive();
             if (!hardDrive.isEmpty()) {
-                utility += userRequirement.getPref_hard_drive() * dellKb.getProductStructure().getOption(hardDrive).getContribution();
+                utility += userPreferences.getHard_drive() * dellKb.getProductStructure().getOption(hardDrive).getContribution();
             }
         }
 
         // operating system
-        if (userRequirement.getPref_operating_system() > 0) {
+        if (userPreferences.getOperating_system() > 0) {
             String operatingSystem = product.getOperating_system();
             if (!operatingSystem.isEmpty()) {
-                utility += userRequirement.getPref_operating_system() * dellKb.getProductStructure().getOption(operatingSystem).getContribution();
+                utility += userPreferences.getOperating_system() * dellKb.getProductStructure().getOption(operatingSystem).getContribution();
             }
         }
 

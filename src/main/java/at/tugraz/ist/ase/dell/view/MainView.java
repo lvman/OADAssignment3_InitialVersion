@@ -11,7 +11,8 @@ package at.tugraz.ist.ase.dell.view;
 
 import at.tugraz.ist.ase.dell.controller.AppController;
 import at.tugraz.ist.ase.dell.model.Option;
-import at.tugraz.ist.ase.dell.model.UserRequirement;
+import at.tugraz.ist.ase.dell.model.UserNeeds;
+import at.tugraz.ist.ase.dell.model.UserPreferences;
 import at.tugraz.ist.ase.dell.view.model.ComboBoxViewModel;
 import at.tugraz.ist.ase.dell.view.model.TableViewModel;
 import lombok.NonNull;
@@ -62,14 +63,11 @@ public class MainView extends JFrame implements ActionListener {
     private JLabel lblPref_Label3;
 
     private final AppController controller;
-    private UserRequirement userRequirement;
 
-    public MainView(@NonNull AppController controller,
-                    @NonNull UserRequirement userRequirement) {
+    public MainView(@NonNull AppController controller) {
         super("DELL configurator");
 
         this.controller = controller;
-        this.userRequirement = userRequirement;
 
         initComponents(controller);
 
@@ -185,20 +183,20 @@ public class MainView extends JFrame implements ActionListener {
     private void next() {
         if (currentTab == TABS.NEEDS) { // if the current tab is the Needs tab
             // get user needs
-            userRequirement = buildUserRequirement(userRequirement);
+            UserNeeds userNeeds = buildUserRequirement();
 
             // identify products that meet the user needs
-            int numOfProducts = controller.findProducts(userRequirement);
+            int numOfProducts = controller.findProducts(userNeeds);
             // update labels on the Preferences tab
             updateLabelsOnPreferencesTab(numOfProducts);
             // show the Preferences tab
             showPreferencesTab();
         } else if (currentTab == TABS.PREFERENCES) { // if the current tab is the Preferences tab
             // get user preferences
-            userRequirement = buildUserPreferences(userRequirement);
+            UserPreferences userPreferences = buildUserPreferences();
 
             // sort products
-            Map.Entry<Integer, TableViewModel> results = controller.sortProducts(userRequirement);
+            Map.Entry<Integer, TableViewModel> results = controller.sortProducts(userPreferences);
             int numberOfResults = results.getKey();
             TableViewModel model = results.getValue();
 
@@ -233,7 +231,7 @@ public class MainView extends JFrame implements ActionListener {
                 ButtonColumn orderColumn = new ButtonColumn(tblResults, order, 8);
             }
             // update labels on the Results tab
-            updateLabelsOnResultsTab(numberOfResults, userRequirement.hasPreferences());
+            updateLabelsOnResultsTab(numberOfResults, userPreferences != null);
             // show the Results tab
             showResultsTab();
         }
@@ -271,77 +269,86 @@ public class MainView extends JFrame implements ActionListener {
 // END OF TASK 1 - State pattern
 //
 
-    public UserRequirement buildUserRequirement(UserRequirement userRequirement) {
+//
+// TASK 3 - Builder pattern
+//
+    public UserNeeds buildUserRequirement() {
+        UserNeeds userNeeds = new UserNeeds();
+
         String selectedPrice_Range = "";
         if (Option.isNotAllOption(Objects.requireNonNull(cmbPrice.getSelectedItem()).toString())) {
             selectedPrice_Range = Objects.requireNonNull(cmbPrice.getSelectedItem()).toString();
         }
-        userRequirement.setPrice_range(selectedPrice_Range);
+        userNeeds.setPrice_range(selectedPrice_Range);
 
         String selectedWeight = "";
         if (Option.isNotAllOption(Objects.requireNonNull(cmbWeight.getSelectedItem()).toString())) {
             selectedWeight = Objects.requireNonNull(cmbWeight.getSelectedItem()).toString();
         }
-        userRequirement.setWeight(selectedWeight);
+        userNeeds.setWeight(selectedWeight);
 
         String selectedProcessor = "";
         if (Option.isNotAllOption(Objects.requireNonNull(cmbProcessor.getSelectedItem()).toString())) {
             selectedProcessor = Objects.requireNonNull(cmbProcessor.getSelectedItem()).toString();
         }
-        userRequirement.setProcessor(selectedProcessor);
+        userNeeds.setProcessor(selectedProcessor);
 
         String selectedMemory = "";
         if (Option.isNotAllOption(Objects.requireNonNull(cmbMemory.getSelectedItem()).toString())) {
             selectedMemory = Objects.requireNonNull(cmbMemory.getSelectedItem()).toString();
         }
-        userRequirement.setMemory(selectedMemory);
+        userNeeds.setMemory(selectedMemory);
 
         String selectedHardDrive = "";
         if (Option.isNotAllOption(Objects.requireNonNull(cmbHardDrive.getSelectedItem()).toString())) {
             selectedHardDrive = Objects.requireNonNull(cmbHardDrive.getSelectedItem()).toString();
         }
-        userRequirement.setHard_drive(selectedHardDrive);
+        userNeeds.setHard_drive(selectedHardDrive);
 
         String selectedOperatingSystem = "";
         if (Option.isNotAllOption(Objects.requireNonNull(cmbOperatingSystem.getSelectedItem()).toString())) {
             selectedOperatingSystem = Objects.requireNonNull(cmbOperatingSystem.getSelectedItem()).toString();
         }
-        userRequirement.setOperating_system(selectedOperatingSystem);
+        userNeeds.setOperating_system(selectedOperatingSystem);
 
-        return userRequirement;
+        return userNeeds;
     }
 
-    public UserRequirement buildUserPreferences(UserRequirement userRequirement) {
+    public UserPreferences buildUserPreferences() {
+        UserPreferences userPreferences = new UserPreferences();
+
         double prefPriceRange = Double.parseDouble(spnPriceRange.getValue().toString()) / 100;
         if (prefPriceRange > 0.0) {
-            userRequirement.setPref_price_range(prefPriceRange);
+            userPreferences.setPrice_range(prefPriceRange);
         }
 
         double prefWeight = Double.parseDouble(spnWeight.getValue().toString()) / 100;
         if (prefWeight > 0.0) {
-            userRequirement.setPref_weight(prefWeight);
+            userPreferences.setWeight(prefWeight);
         }
 
         double prefProcessor = Double.parseDouble(spnProcessor.getValue().toString()) / 100;
         if (prefProcessor > 0.0) {
-            userRequirement.setPref_processor(prefProcessor);
+            userPreferences.setProcessor(prefProcessor);
         }
 
         double prefMemory = Double.parseDouble(spnMemory.getValue().toString()) / 100;
         if (prefMemory > 0.0) {
-            userRequirement.setPref_memory(prefMemory);
+            userPreferences.setMemory(prefMemory);
         }
 
         double prefHardDrive = Double.parseDouble(spnHardDrive.getValue().toString()) / 100;
         if (prefHardDrive > 0.0) {
-            userRequirement.setPref_hard_drive(prefHardDrive);
+            userPreferences.setHard_drive(prefHardDrive);
         }
 
         double prefOperatingSystem = Double.parseDouble(spnOperatingSystem.getValue().toString()) / 100;
         if (prefOperatingSystem > 0.0) {
-            userRequirement.setPref_operating_system(prefOperatingSystem);
+            userPreferences.setOperating_system(prefOperatingSystem);
         }
 
-        return userRequirement;
+        return userPreferences.hasPreferences() ? userPreferences : null;
     }
+//
+// END OF TASK 3 - Builder pattern
 }
