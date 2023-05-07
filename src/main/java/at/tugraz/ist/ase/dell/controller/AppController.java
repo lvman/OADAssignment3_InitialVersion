@@ -79,6 +79,9 @@ public class AppController {
         return products.size();
     }
 
+//
+// BEGIN OF TASK 2 - Strategy pattern
+//
     public Map.Entry<Integer, TableViewModel> sortProducts(@NonNull UserRequirement userRequirement) {
         if (products.isEmpty()) {
             return Map.entry(0, new TableViewModel(new String[0], new Object[0][0]));
@@ -151,4 +154,7 @@ public class AppController {
 
         return utility;
     }
+//
+// END OF TASK 2 - Strategy pattern
+//
 }

@@ -123,7 +123,7 @@ public class MainView extends JFrame implements ActionListener {
     }
 
 //
-// BEGIN OF TASK 1 - State strategy
+// BEGIN OF TASK 1 - State pattern
 //
     enum TABS {NEEDS, PREFERENCES, RESULTS}
     private TABS currentTab; // keeps track of the current tab
@@ -268,7 +268,7 @@ public class MainView extends JFrame implements ActionListener {
         }
     }
 //
-// END OF TASK 1 - State strategy
+// END OF TASK 1 - State pattern
 //
 
     public UserRequirement buildUserRequirement(UserRequirement userRequirement) {
