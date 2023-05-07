@@ -188,9 +188,9 @@ public class MainView extends JFrame implements ActionListener {
             userRequirement = buildUserRequirement(userRequirement);
 
             // identify products that meet the user needs
-            Map.Entry<Integer, TableViewModel> results = controller.getResults(userRequirement);
+            int numOfProducts = controller.findProducts(userRequirement);
             // update labels on the Preferences tab
-            updateLabelsOnPreferencesTab(results.getKey());
+            updateLabelsOnPreferencesTab(numOfProducts);
             // show the Preferences tab
             showPreferencesTab();
         } else if (currentTab == TABS.PREFERENCES) { // if the current tab is the Preferences tab

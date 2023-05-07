@@ -16,7 +16,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ComponentMapper {
-    public ComboBoxViewModel toComponentOptionsViewModel(@NonNull Component component) {
+    public ComboBoxViewModel toComboBoxViewModel(@NonNull Component component) {
         return new ComboBoxViewModel(component.getOptionNames().toArray(new String[0]));
     }
 }

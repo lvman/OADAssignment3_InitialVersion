@@ -22,7 +22,6 @@ import at.tugraz.ist.ase.kb.core.Variable;
 import at.tugraz.ist.ase.kb.fm.FMKB;
 import lombok.Cleanup;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.chocosolver.solver.Model;
 
 import java.io.*;
@@ -32,7 +31,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-@NoArgsConstructor
 public class DellKB {
 
     static final String FEATURE_MODEL_FILE = "src/main/resources/DELL.splx";

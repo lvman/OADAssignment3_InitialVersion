@@ -33,6 +33,7 @@ public class ProductMapper {
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         for (int i = 0; i < products.size(); i++) {
             Product product = products.get(i);
+
             data[i][0] = product.getCategory();
             data[i][1] = product.getProcessor();
             data[i][2] = product.getMemory();

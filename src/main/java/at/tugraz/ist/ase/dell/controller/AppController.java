@@ -19,6 +19,7 @@ import at.tugraz.ist.ase.dell.view.MainView;
 import at.tugraz.ist.ase.dell.view.model.ComboBoxViewModel;
 import at.tugraz.ist.ase.dell.view.model.TableViewModel;
 import at.tugraz.ist.ase.fm.parser.FeatureModelParserException;
+import lombok.NonNull;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -27,88 +28,58 @@ import java.util.List;
 import java.util.Map;
 
 public class AppController {
-    DellKB dellKb;
-    UserRequirement userRequirement;
-    JFrame mainView;
+    protected DellKB dellKb;
+    protected UserRequirement userRequirement;
+    protected JFrame mainView;
 
-    List<Product> products = null;
+    protected List<Product> products = null;
 
     public void createAndShowMainView() throws FeatureModelParserException, IOException {
-        System.out.println("init");
-
-        // create the KB
+        // create the DellKB
         dellKb = new DellKB();
         dellKb.init();
 
-        // print out components
-//        dellKb.getProductStructure().getComponents().forEach(component -> {
-//            System.out.println("Component: " + component.getName());
-//            component.getOptions().forEach(option -> {
-//                System.out.println("Option: " + option.getName());
-//            });
-//        });
-
-        findAllSolutions();
-
-        System.out.println("init done");
-
         userRequirement = new UserRequirement();
 
-        //Use the Java look and feel.
+        // use the Java look and feel.
         try {
             UIManager.setLookAndFeel(
                     UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (Exception ignored) { }
 
-        //Make sure we have nice window decorations.
+        // make sure we have nice window decorations.
         JFrame.setDefaultLookAndFeelDecorated(true);
         JDialog.setDefaultLookAndFeelDecorated(true);
 
-        mainView = new MainView(this,
-                userRequirement);
-        mainView.setLocationRelativeTo(null); //center it
+        mainView = new MainView(this, userRequirement);
+        mainView.setLocationRelativeTo(null); //center the window
         mainView.setVisible(true);
     }
 
-    public Map<String, ComboBoxViewModel> getComponentOptionsViewModels(List<String> comboBoxNames) {
+    public Map<String, ComboBoxViewModel> getComponentOptionsViewModels(@NonNull List<String> comboBoxNames) {
         Map<String, ComboBoxViewModel>  map = new HashMap<>();
         for (String comboboxName : comboBoxNames) {
             Component component = dellKb.getProductStructure().getComponent(comboboxName);
-            map.put(comboboxName, ComponentMapper.toComponentOptionsViewModel(component));
+            map.put(comboboxName, ComponentMapper.toComboBoxViewModel(component));
         }
         return map;
     }
 
-    public int findAllSolutions() {
-        Configurator configurator = new Configurator(dellKb);
-
-        configurator.findAllSolutions(0);
-        System.out.println("Number of solutions: " + configurator.getNumberSolutions());
-        assert configurator.getNumberSolutions() == 2319;
-
-        return configurator.getNumberSolutions();
-
-//        for (Solution s : configurator.getSolutions()) {
-//            System.out.println(s);
-//        }
-    }
-
-    public Map.Entry<Integer, TableViewModel> getResults(UserRequirement userRequirement) {
+    public int findProducts(@NonNull UserRequirement userRequirement) {
         Configurator configurator = new Configurator(dellKb);
 
         // map to Requirement
         Requirement requirement = UserRequirementMapper.toRequirement(userRequirement, dellKb.getProductStructure());
 
         configurator.findAllSolutions(0, requirement);
-        System.out.println("Number of solutions: " + configurator.getNumberSolutions());
+//        System.out.println("Number of solutions: " + configurator.getNumberSolutions());
 
         products = ProductMapper.fromSolutions(configurator.getSolutions(), dellKb.getProductStructure(), dellKb.getProductCatalog());
 
-        TableViewModel tableViewModel = ProductMapper.toTableViewModel(products, DellKB.getRESULT_TABLE_COLUMN_NAMES());
-        return Map.entry(products.size(), tableViewModel);
+        return products.size();
     }
 
-    public Map.Entry<Integer, TableViewModel> sortProducts(UserRequirement userRequirement) {
+    public Map.Entry<Integer, TableViewModel> sortProducts(@NonNull UserRequirement userRequirement) {
         if (products.isEmpty()) {
             return Map.entry(0, new TableViewModel(new String[0], new Object[0][0]));
         }
