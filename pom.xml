@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Object-Oriented Analysis and Design
+  ~
+  ~ Copyright (c) 2023 AIG team, Institute for Software Technology,
+  ~ Graz University of Technology, Austria
+  ~
+  ~ Contact: http://ase.ist.tugraz.at/ASE/
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -31,7 +40,7 @@
         <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>at.tugraz.ist.ase</groupId>
-            <artifactId>choco-kb-v2</artifactId>
+            <artifactId>ca-cdr-v2</artifactId>
             <version>${chocokb.version}</version>
             <scope>compile</scope>
         </dependency>
@@ -53,7 +62,7 @@
 <!--            <id>github-maven-repository</id>-->
 <!--            <username>lvman</username>-->
 <!--            &lt;!&ndash;DownloadPackageOnlyTokenforOAD&ndash;&gt;-->
-<!--            <password>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</password>-->
+<!--            <password>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</password>-->
 <!--        </server>-->
 <!--    </servers>-->
 </project>
