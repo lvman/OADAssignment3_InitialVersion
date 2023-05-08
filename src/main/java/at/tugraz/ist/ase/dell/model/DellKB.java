@@ -131,10 +131,10 @@ public class DellKB {
             String[] parts = line.split(";");
 
             String optionName = parts[0];
-            int utility = Integer.parseInt(parts[1]);
+            int contribution = Integer.parseInt(parts[1]);
 
             Option option = productStructure.getOption(optionName);
-            option.setContribution(utility);
+            option.setContribution(contribution);
         }
     }
 
