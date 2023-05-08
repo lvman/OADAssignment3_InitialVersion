@@ -31,7 +31,7 @@
         <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>at.tugraz.ist.ase</groupId>
-            <artifactId>cdrmodel-v2</artifactId>
+            <artifactId>choco-kb-v2</artifactId>
             <version>${chocokb.version}</version>
             <scope>compile</scope>
         </dependency>
@@ -43,4 +43,17 @@
         </dependency>
     </dependencies>
 
+<!--COPY THIS SECTION TO YOUR SETTINGS.XML FILE-->
+<!--    <activeProfiles>-->
+<!--        <activeProfile>github-maven-repository</activeProfile>-->
+<!--    </activeProfiles>-->
+
+<!--    <servers>-->
+<!--        <server>-->
+<!--            <id>github-maven-repository</id>-->
+<!--            <username>lvman</username>-->
+<!--            &lt;!&ndash;DownloadPackageOnlyTokenforOAD&ndash;&gt;-->
+<!--            <password>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</password>-->
+<!--        </server>-->
+<!--    </servers>-->
 </project>
